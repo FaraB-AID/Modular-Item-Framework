@@ -1,0 +1,93 @@
+
+```javascript
+const modifier = (text) => {
+  let modifiedText = text
+  let stop = false
+  const lowered = text.toLowerCase()
+  var inputText = lowered.trim().split(" ")
+  
+  function togTo1() {
+    if (state.set.tog != 1) {
+      state.set.togg = 1
+    }
+  }
+  
+//This is the heart of the script. If the input contains a term from state.loot.key, it will then evaluate the output for terms from 
+//each state.inv "noun" key. Each time it finds a match, it then looks within 15 (default) characters of that "noun" for a term from  
+//the same .inv item's "adjective" key. When that also matches, it will increase that item's .amt by 1 and add a notification that 
+//you've looted that item to your message.
+    
+  if(state.loot.check.length >= 1) {
+    for (var i in state.inv) {
+      var x = state.inv[`${i}`]
+      x.temp = 0
+      togTo1()
+      for (var i2 = 0; i2 < x.key.length; i2++) {
+        var indices = []
+        var idx = lowered.indexOf(x.key[i2])
+        while (idx != -1) {
+          indices.push(idx);
+          idx = lowered.indexOf(x.key[i2], idx + 1)
+        }
+        for (var i3 = 0; i3 < indices.length; i3++, state.set.tog++) {
+          for (var i4 = 0; i4 < x.key2.length; i4++) {
+            var indices2 = []
+            var idx2 = lowered.indexOf(x.key2[i4])
+            while (idx2 != -1) {
+              indices2.push(idx2);
+              idx2 = lowered.indexOf(x.key2[i4], idx2 + 1)
+            }
+            for (var i5 = 0; i5 < indices2.length; i5++) {
+              var y = indices[i3]
+              var y2 = indices2[i5]
+              if(y2 >= 0 && y2 <= (y + state.set.tolerance) && y2 >= (y - state.set.tolerance) && state.set.tog == 1) {
+                x.amt++
+                x.temp++ 
+                state.set.tog--
+              }
+            }
+          }
+        }
+      }
+    }
+    for (var i6 in state.inv) {
+      var z = state.inv[`${i6}`]
+      if (z.temp == 1){
+        state.message += `1 ${z.name} added to your ${z.type} chest.\n`
+      } else if (z.temp >= 1) {
+        state.message += `${z.temp} ${z.namePl} added to your ${z.type} chest.\n`
+      }
+      z.temp = 0
+    }
+    state.loot.check = []
+    togTo1()
+    }
+  }  
+
+//This sets .inventory.quantity to .inv.amt after each output (so the sidebar menu is properly updated)
+  if(state.set.invUpd){
+    for (var i in state.inv) {
+      var x = state.inv[`${i}`]
+      for (var i2 = 0; i2 < state.inventory.length; i2++){
+        y = state.inventory[`${i2}`]
+        if(x.namePl == y.name) {
+          y.quantity = x.amt
+        }
+      }
+    }
+//This removes .inventory objects with a .quantity of 0 from .inventory, so they don't show up errantly in the sidebar menu    
+    for (var i = 0; i < state.inventory.length; i++){
+      var x = state.inventory[`${i}`]
+      if (x.quantity == 0) {
+        state.inventory = state.inventory.slice(0, i).concat(state.inventory.slice(i + 1))
+        i--
+      }
+    }
+    state.set.invUpd = false
+  }
+
+  return { text: modifiedText }
+}
+
+modifier(text)
+```
