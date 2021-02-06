@@ -43,7 +43,7 @@ The Equip Bot checks **input** for a craft *trigger* or the */craft command*. It
 
 The bot checks whether you have enough materials for a recipe, and the required tools, before allowing you to craft it; on a successful craft, materials are removed from your inventory and the crafted item is added. It informs you of these results with a message.
 
-This bot will also dynamically update your .inventory sidebar menu with rafting recipes you have enough materials to craft.
+This bot will also dynamically update your .inventory sidebar menu with crafting recipes you have enough materials to craft.
 
 ###### Score Script (Upcoming)
 The Score Script checks **input** for a retire *trigger* or */retire command*. It then prompts a confirmation. On confirmation, the script will tabulate your final score, based on the total value of your .inv items and equipment. The script then delivers a pre-written retirement epilogue (higher scores produce better outcomes). 
