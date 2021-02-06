@@ -118,11 +118,11 @@ const modifier = (text) => {
 //This rebuilds your .inventory sidebar from your .inv items. It is unfortunately necessary to do this
 //with every player input, due to the weird and inaccessible .inventory backend code.
   state.inventory = []
-  state.inventory.push({name: "―――Equipment", quantity: "――――――――"})
+  state.inventory.push({name: "―Equipment", quantity: "――――――"})
   addType ("weapon")
   addType ("tool")
   addType ("armor")
-  state.inventory.push({name: '\n――――Materials', quantity: "\n――――――――"})
+  state.inventory.push({name: '\n――Materials', quantity: "\n――――――"})
   addType ("materials")
 
   state.message = ""
