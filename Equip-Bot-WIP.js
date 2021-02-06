@@ -1,3 +1,5 @@
+
+sed -n '/\/SHARED/,/\/INPUT/{/\/SHARED/b;/\/INPUT/b;p}' Equip-Bot-WIP.js > shared.js
 //THIS IS NOT YET FUNCTIONAL, UNDER CONSTRUCTION
 
 //SHARED LIBRARY
