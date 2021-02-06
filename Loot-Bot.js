@@ -1,3 +1,4 @@
+
 //SHARED LIBRARY
 
 //This sets up required initial states.
@@ -14,25 +15,12 @@ if(!state.setup) {
 }
 
 const lowered = text.toLowerCase()
-const commandMatcher = text.match(/\n? ?(?:> You |> You say "|)\/(\w+?)( [\w ]+)?[".]?\n?$/i) ? text.match(/\n? ?(?:> You |> You say "|)\/(\w+?)( [\w ]+)?[".]?\n?$/i) : []
-const command = commandMatcher[1]
-const args = commandMatcher[2] ? commandMatcher[2].trim().split(' ') : []
-
-function addType (type){
-  for (i in state.inv) {
-    var x = state.inv[`${i}`]
-    if (x.type == type){
-      state.inventory.push({name: x.namePl, quantity: x.amt})
-    }
-  }
-}
 
 //This checks for key terms. It will be use in this script to check player input for a term indicating they're looting.
 function check(object) {
-  state[object].check = []
-  if(lowered.match(state[object].key) == null) { 
-    state[object].check = "" 
-  } else { state[object].check = lowered.match(state[object].key)
+    state[object].check = []
+  if(lowered.match(state[object].key)) { 
+    { state[object].check = lowered.match(state[object].key)
   }
 }
 
@@ -84,6 +72,16 @@ function lootEval(){
   state.set.tog = 1
 }
 
+//This function is used to add one .type of items to our sidebar .inventory menu; it is how we sort the menu.
+function addType (type){
+  for (i in state.inv) {
+    var x = state.inv[`${i}`]
+    if (x.type == type){
+      state.inventory.push({name: x.namePl, quantity: x.amt})
+    }
+  }
+}
+  
 //When called, this sets .inventory.quantity to .inv.amt after each output (so the sidebar menu is properly updated).
 //It also removes .inventory items with 0 quantity to prevent them from errantly appearing in the sidebar with a quantity of 1
 function inventoryUpd(){
@@ -110,6 +108,12 @@ function inventoryUpd(){
 const modifier = (text) => {
   let modifiedText = text
   let stop = false
+  
+//This allows us to identify commands (inputs starting with "/", even if they are in do or say mode. 
+//The first word minus the "/" is the command. Subsequent words are split up as args.
+  var commandMatcher = text.match(/\n? ?(?:> You |> You say "|)\/(\w+?)( [\w ]+)?[".]?\n?$/i) ? text.match(/\n? ?(?:> You |> You say "|)\/(\w+?)( [\w ]+)?[".]?\n?$/i) : []
+  var command = commandMatcher[1]
+  state.set.args = commandMatcher[2] ? commandMatcher[2].trim().split(' ') : []
 
 //This rebuilds your .inventory sidebar from your .inv items. It is unfortunately necessary to do this
 //with every player input, due to the weird and inaccessible .inventory backend code.
@@ -126,27 +130,66 @@ const modifier = (text) => {
 //This checks player input for terms from the state.lewt.key regex, for later use.
   check ("lewt")
 
-//This is a backup command for if the .inventory sidebar grows clunky. It lists .inv items 
-//you have 1 or more of in a relatively compact message.
-  if(command == "inv") {
-    state.message = "Inventory Contents:\n"
+//This is the "loot literal" version of the loot command. It only triggers when you type "/loot #" followed by the exact name
+//of an item. It adds # of that item to your inventory.
+  if(command == "loot" && !isNaN(state.set.args[0])){
+    var num = Number(state.set.args[0])
+    state.set.args.shift()
+    var y = state.set.args.join(" ").toLowerCase()
     for(var i in state.inv) {
-      state.message += state.inv[`${i}`].name + ": " + state.inv[`${i}`].amt + " | "
+      var x = state.inv[`${i}`]
+      var k = x.name.toLowerCase()
+      var k2 = x.namePl.toLowerCase()
+      if(y == k || y == k2) {
+        x.amt += num 
+        x.temp = num 
+        break
+      }
     }
-    state.message = state.message.replace(new RegExp(' | ' + '$'), '');
+    for (var i6 in state.inv) {
+      var z = state.inv[`${i6}`]
+      if (z.temp == 1){
+        state.message += `1 ${z.name} added to your ${z.type} chest.\n`
+      } else if (z.temp >= 1) {
+        state.message += `${z.temp} ${z.namePl} added to your ${z.type} chest.\n`
+      }
+      z.temp = 0
+    }
+    state.set.inUpd = true
     modifiedText = ""
   }
-
-//This is a command for adding loot. It uses the same flexible key detection as the output bot,
-//and can accept multiples of items and multiple items at once (though listing # item, like 3 iron ingots)
-//is not yet implimented. I need to get better at regexp before I can do that bit.
-  if(command == "loot"){
+  
+//This is the command for adding loot using multi-key evealuation. It triggers when "/loot" is followed by anything but a #.
+//It can accept multiples of items (if they're listed seperately) and multiple items at once, but will only see # item as 
+//one of that item.
+  if(command == "loot" && !state.set.inUpd){
     lootEval()
     state.set.inUpd = true
     modifiedText = ""
   }
 
-//This updates your .inventory menu after using the loot command.
+//This is a backup command for if the .inventory sidebar grows clunky. It lists .inv items 
+//you have 1 or more of in a relatively compact message.
+  if(command == "inv") {
+    state.message = "Inventory Contents:\n"
+    for(var i in state.inv) {
+      x = state.inv[`${i}`]
+      if(x.amt >= 0){
+        state.message += `${x.name}: ${x.amt} | `
+      }
+    }
+    invReg = / \| $/
+    state.message = state.message.replace(invReg, '');
+    modifiedText = ""
+  }
+
+ //A basic command to remove your message "/clear".
+  if(command == "clear"){
+    state.message = ""
+    modifiedText = ""
+  }
+
+//This updates your .inventory sidebar menu if you've used a "/loot" command.
   if(state.set.inUpd){
     inventoryUpd ()
     state.set.inUpd = false
@@ -168,7 +211,7 @@ const modifier = (text) => {
     lootEval()
     state.set.outUpd = true
   }  
-
+  
 //This updates the .inventory menu if loot evaluation was triggered for the output. 
   if(state.set.outUpd){
     inventoryUpd()
