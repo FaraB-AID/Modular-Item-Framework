@@ -7,11 +7,11 @@ const modifier = (text) => {
   state.set.args = commandMatcher[2] ? commandMatcher[2].trim().split(' ') : []
 
   state.inventory = []
-  state.inventory.push({name: "―――Equipment", quantity: "――――――――"})
+  state.inventory.push({name: "―Equipment", quantity: "――――――"})
   addType ("weapon")
   addType ("tool")
   addType ("armor")
-  state.inventory.push({name: '\n――――Materials', quantity: "\n――――――――"})
+  state.inventory.push({name: '\n――Materials', quantity: "\n――――――"})
   addType ("materials")
 
   state.message = ""
