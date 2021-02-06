@@ -20,7 +20,7 @@ const lowered = text.toLowerCase()
 function check(object) {
     state[object].check = []
   if(lowered.match(state[object].key)) { 
-    { state[object].check = lowered.match(state[object].key)
+    state[object].check = lowered.match(state[object].key)
   }
 }
 
