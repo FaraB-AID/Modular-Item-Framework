@@ -19,31 +19,31 @@ Most 𝐌𝐈𝐅 systems make use of multi-key evaluation, which use a *trigger
 
 ## Systems
 
-###### Loot Bot (Complete)
-The Loot Bot checks **input** for a loot *trigger* or the */loot* *command*. It then uses multi-key evaluation to check for items to add to your inventory from a preconfigured list. The loot *trigger* makes the bot evaluate the AI's **output** for hits; the */loot command* makes the bot evaluate the rest of your **input** for hits.
+###### Loot (Complete)
+The Loot script checks **input** for a loot *trigger* or the */loot* *command*. It then uses multi-key evaluation to check for items to add to your inventory from a preconfigured list. The loot *trigger* makes the script evaluate the AI's **output** for hits; the */loot command* makes the script evaluate the rest of your **input** for hits.
 
 It also features a few basic *commands*: a more rigid version of */loot* that requires specific item name, but also allows for an associated number of that item to add;  */inv* to display .inv items you have 1 or more of as a message (as an alternative to the sidebar); */clear* to empty your message.
 
-###### Equip Bot (Current Project)
-The Equip Bot checks **input** for an equip *trigger* or the */equip command*. It then uses multi-key evaluation on your **input** to determine what you're equipping. 
+###### Equipment (Current Project)
+The Equip script checks **input** for an equip *trigger* or the */equip command*. It then uses multi-key evaluation on your **input** to determine what you're equipping. 
 
 It can equip multiple items at once, but only one per equip category (default: weapon, tool, armor), and only allows you to equip items you have 1 or more of in your inventory. It then sets your .equip.*type* with properties corresponding to those predefined in the .inv item. It removes the equipped item from your inventory, returns the previously equipped item to your inventory, and updates you with a message.
 
-The Equip Bot keeps your equipment and their properties at the forefront of the AI's context by using a customized script similar to Author's Note to hold equipment information just behind your most recent input. Equipment info is formatted with modified cat<nip> 2.0. 
+The Equip script keeps your equipment and their properties at the forefront of the AI's context by using a customized script similar to Author's Note to hold equipment information just behind your most recent input. Equipment info is formatted with modified cat<nip> 2.0. 
   
 Item enchantment will be included if possible.
 
-###### Use Bot (Upcoming)
-The Use Bot checks **input** for a consumable *trigger* that indicates you're using a consumable item (such as a potion or grenade). It then uses multi-key evaluation on your **input** to determine what you're using. 
+###### Use / Consumables (Upcoming)
+The Use script checks **input** for a consumable *trigger* that indicates you're using a consumable item (such as a potion or grenade). It then uses multi-key evaluation on your **input** to determine what you're using. 
 
 You can use multiple different useables at once, but only if you have 1 or more in your inventory. The item count is then reduced by 1, and a hidden state.memory.frontMemory is included after your input which informs the AI of the affects the consumable has. 
 
-###### Craft Bot (Upcoming)
-The Equip Bot checks **input** for a craft *trigger* or the */craft command*. It then uses multi-key evaluation on your **input** to determine what you're crafting.
+###### Crafting (Upcoming)
+The Crafting script checks **input** for a craft *trigger* or the */craft command*. It then uses multi-key evaluation on your **input** to determine what you're crafting.
 
-The bot checks whether you have enough materials for a recipe, and the required tools, before allowing you to craft it; on a successful craft, materials are removed from your inventory and the crafted item is added. It informs you of these results with a message.
+The script checks whether you have enough materials for a recipe, and the required tools, before allowing you to craft it; on a successful craft, materials are removed from your inventory and the crafted item is added. It informs you of these results with a message.
 
-This bot will also dynamically update your .inventory sidebar menu with crafting recipes you have enough materials to craft.
+This script will also dynamically update your .inventory sidebar menu with crafting recipes you have enough materials to craft.
 
 ###### Score Script (Upcoming)
 The Score Script checks **input** for a retire *trigger* or */retire command*. It then prompts a confirmation. On confirmation, the script will tabulate your final score, based on the total value of your .inv items and equipment. The script then delivers a pre-written retirement epilogue (higher scores produce better outcomes). 
